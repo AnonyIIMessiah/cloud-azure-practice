@@ -1,4 +1,23 @@
 # Week 4
+
+Storage Type | What it is |Real problem it solves| AWS Equivalent |
+|----------------|----------------|-------------------|------------------|
+Blob Storage | Object storage (files |  images |  logs |  backups) | Unlimited cheap durable storage for anything | S3
+File Share | SMB/NFS file share in the cloud | Lift-and-shift file servers |  shared drives for apps | EFS + FSx
+Queue Storage | Simple message queue | Decouple app components |  worker pattern | SQS
+Table Storage | NoSQL key-value store (legacy) | Rarely used now — replaced by Cosmos DB | DynamoDB (sort of)
+
+## Redundancy options
+
+Type | Copies | Geography | Survives zone failure? | Survives region failure? 
+|--------------|-------------------|-------------|-------------------|----------------|
+LRS | 3 | Same zone | No | No 
+ZRS | 3 | 3 zones same region | Yes | No 
+GRS | 6 | Primary + secondary region | Yes | Yes (read-only secondary) 
+GZRS | 6 | 3 zones + secondary region | Yes | Yes (read-only) 
+
+## Commands with BLOB operations log(Proof)
+
 To create a Storage account
 ```
 az storage account create -n testblobstorageyc -g yc-basics-rg-12345 -l centralindia --sku Standard_LRS
@@ -22,7 +41,7 @@ az storage blob upload --account-name testblobstorageyc --container-name contain
   --file Readme.md \
   --sas-token "se=2025-11-15T15%3A30%3A00Z&sp=rwl&spr=https&sv=2022-11-02&sr=c&sig=rTANc622lXgzQlq7eNZQcYYPq0MYXcH99QgxLG9ONbk%3D"
 ```
-Logs:
+
 ```
 {
   "client_request_id": "cad6c32d-c1fb-11f0-b144-0800278dcb09",
