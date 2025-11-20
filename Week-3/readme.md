@@ -1,5 +1,25 @@
 # Week 3
 
+## Decision Matrix (2025)
+| Compute         | Need root? | Ops Burden | Scale-to-zero | Cost when idle | Winner when…                     |
+|-----------------|------------|------------|---------------|----------------|----------------------------------|
+| VM              | Yes        | High       | No            | Full price     | Legacy/custom OS                 |
+| App Service     | No         | Zero       | No            | ~$13/mo        | Standard web apps (default)      |
+| Container Apps  | No         | Very low   | Yes           | $0             | Containers + event-driven        |
+
+# Compute Choice Decision Note
+
+| Criteria | VM | App Service | Container Apps |
+|--------|----|-------------|----------------|
+| **Setup Time** | 15 min | 3 min | 10 min |
+| **Ops Burden** | High (patch, scale) | Low | Medium |
+| **Scale-Out** | Manual/VMSS | Auto | Auto |
+| **Custom OS** | Yes | No | No |
+| **Cost (B1s equiv)** | ~$13/mo | ~$13/mo (B1) | ~$20/mo |
+| **Best For** | Legacy, full control | Standard web apps | Docker, microservices |
+
+
+## Commands
 To create a public IP
 ```
 az network public-ip create --resource-group yc-basics-rg-12345 --name vm-web-ip --dns-name yc-week3-vm --allocation-method Static --sku Standard
@@ -29,14 +49,4 @@ az vm create \
 
 **Link**: http://yc-week3-vm.centralindia.cloudapp.azure.com/
 
-# Compute Choice Decision Note
-
-| Criteria | VM | App Service | Container Apps |
-|--------|----|-------------|----------------|
-| **Setup Time** | 15 min | 3 min | 10 min |
-| **Ops Burden** | High (patch, scale) | Low | Medium |
-| **Scale-Out** | Manual/VMSS | Auto | Auto |
-| **Custom OS** | Yes | No | No |
-| **Cost (B1s equiv)** | ~$13/mo | ~$13/mo (B1) | ~$20/mo |
-| **Best For** | Legacy, full control | Standard web apps | Docker, microservices |
 
