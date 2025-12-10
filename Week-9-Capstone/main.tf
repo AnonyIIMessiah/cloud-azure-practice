@@ -1,6 +1,3 @@
-# =====================================================
-# TERRAFORM BACKEND – Store state in Azure Storage
-# =====================================================
 
 terraform {
   required_providers {
@@ -8,10 +5,10 @@ terraform {
     random  = { source = "hashicorp/random",  version = "~>3.0" }
   }
 
-  # THIS IS THE ONLY NEW PART
+  
   backend "azurerm" {
-    resource_group_name  = "yc-basics-rg-12345"        # ← create this once manually
-    storage_account_name = "ycbasicstfstate"        # ← must be globally unique
+    resource_group_name  = "yc-basics-rg-12345"        
+    storage_account_name = "ycbasicstfstate"        
     container_name       = "tfstate"
     key                  = "3tier-capstone.tfstate"
   }
@@ -48,7 +45,7 @@ resource "azurerm_resource_group" "rg" {
   tags     = local.tags
 }
 
-# ==================== SQL SERVER + DATABASE (DTU Basic – quota-safe) ====================
+# ==================== SQL SERVER + DATABASE ====================
 # resource "azurerm_mssql_server" "sql" {
 #   name                         = "${local.prefix}-sql"
 #   resource_group_name          = azurerm_resource_group.rg.name
@@ -98,7 +95,7 @@ resource "azurerm_resource_group" "rg" {
 #   tags = local.tags
 # }
 
-# # FIXED: Access Policy for YOUR user (Terraform runner) – apply BEFORE secrets
+#  
 # resource "azurerm_key_vault_access_policy" "terraform_user" {
 #   key_vault_id = azurerm_key_vault.kv.id
 #   tenant_id    = data.azurerm_client_config.current.tenant_id
@@ -116,7 +113,7 @@ resource "azurerm_service_plan" "plan" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   os_type             = "Linux"
-  sku_name            = "B1"  # FIXED: B1 for stable polling (not F1/Free)
+  sku_name            = "B1"  
   tags                = local.tags
 }
 
@@ -172,38 +169,6 @@ resource "azurerm_linux_web_app" "frontend" {
 
   tags = local.tags
 }
-
-# # ==================== LOG ANALYTICS + BUDGET ====================
-# resource "azurerm_log_analytics_workspace" "logs" {
-#   name                = "${local.prefix}-logs"
-#   location            = azurerm_resource_group.rg.location
-#   resource_group_name = azurerm_resource_group.rg.name
-#   sku                 = "PerGB2018"
-#   retention_in_days   = 30
-#   tags                = local.tags
-# }
-
-# resource "azurerm_consumption_budget_resource_group" "budget" {
-#   name              = "${local.prefix}-budget"
-#   resource_group_id = azurerm_resource_group.rg.id
-#   amount            = 50
-#   time_grain        = "Monthly"
-
-#   time_period { start_date = "2025-12-01T00:00:00Z" }
-
-#   notification {
-#     enabled        = true
-#     threshold      = 80
-#     operator       = "GreaterThan"
-#     contact_emails = ["your-email@domain.com"]  # Change this
-#   }
-#   notification {
-#     enabled        = true
-#     threshold      = 100
-#     operator       = "GreaterThan"
-#     contact_emails = ["your-email@domain.com"]
-#   }
-# }
 
 # ==================== OUTPUTS ====================
 output "frontend_url" { value = "https://${azurerm_linux_web_app.frontend.default_hostname}" }
